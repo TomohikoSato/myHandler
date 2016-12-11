@@ -19,17 +19,43 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public class LooperThread extends Thread {
+		Looper looper;
+
 		@Override
 		public void run() {
 			Looper.prepare();
-			Toast.makeText(MainActivity.this, "fugafuga", Toast.LENGTH_SHORT).show();
+			looper = Looper.myLooper();
+			synchronized (this) {
+				notifyAll();
+			}
 			Looper.loop();
+		}
+
+		public Looper getLooper() {
+			try {
+				synchronized (this) {
+					wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return looper;
 		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		new LooperThread().start();
+		LooperThread looperThread = new LooperThread();
+		looperThread.start();
+
+		new Handler(looperThread.getLooper()).post(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(MainActivity.this, "fugafuga", Toast.LENGTH_SHORT).show();
+			}
+		});
+
+
 	}
 }
