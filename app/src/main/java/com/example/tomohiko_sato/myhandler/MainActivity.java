@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 			handler = new Handler() {
 				public void handleMessage(Message msg) {
 					Log.d("handler", msg.toString());
+					Toast.makeText(MainActivity.this, "handler", Toast.LENGTH_SHORT).show();
 					// process incoming messages here
 				}
 			};
