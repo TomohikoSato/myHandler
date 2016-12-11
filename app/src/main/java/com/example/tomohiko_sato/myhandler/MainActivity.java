@@ -15,10 +15,13 @@ public class MainActivity extends AppCompatActivity {
 
 	LooperThread looperThread;
 
+	TextView textView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		textView = (TextView) findViewById(R.id.text_view);
 
 		Button button = (Button) findViewById(R.id.button);
 		button.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 				public void handleMessage(Message msg) {
 					Log.d("handler", msg.toString());
 					Toast.makeText(MainActivity.this, "handler", Toast.LENGTH_SHORT).show();
-					// process incoming messages here
+					textView.setText("hogehgoehoge");
 				}
 			};
 
