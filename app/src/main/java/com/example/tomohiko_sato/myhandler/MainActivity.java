@@ -1,7 +1,11 @@
 package com.example.tomohiko_sato.myhandler;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -13,49 +17,61 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-	LooperThread looperThread;
+	private final String TAG = MainActivity.class.getSimpleName();
+	private WorkerThreadService service;
+	private boolean isBound;
 
-	TextView textView;
+	private final ServiceConnection conn = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder) {
+			service = ((WorkerThreadService.ServiceBinder) binder).getService();
+			Log.d(TAG, "service connected");
+			isBound = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			Log.d(TAG, "service disconnected");
+			isBound = false;
+			service = null;
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		textView = (TextView) findViewById(R.id.text_view);
 
-		Button button = (Button) findViewById(R.id.button);
-		button.setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.button_hello).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				looperThread.handler.sendMessage(Message.obtain(null, 345, "hogehoge"));
+				if (isBound) {
+					service.hello();
+				}
 			}
 		});
-
-		looperThread = new LooperThread();
-		looperThread.start();
-	}
-
-
-	class LooperThread extends Thread {
-		public Handler handler;
-
-		public void run() {
-			Looper.prepare();
-
-			handler = new Handler() {
-				public void handleMessage(Message msg) {
-					Log.d("handler", msg.toString());
-					Toast.makeText(MainActivity.this, "handler", Toast.LENGTH_SHORT).show();
-					textView.setText("hogehgoehoge");
+		findViewById(R.id.button_bye).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (isBound) {
+					service.bye();
 				}
-			};
-
-			Looper.loop();
-		}
+			}
+		});
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG, "bind service");
+		bindService(new Intent(this, WorkerThreadService.class), conn, BIND_AUTO_CREATE);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d(TAG, "unbind service");
+		unbindService(conn);
+		isBound = false;
 	}
 }

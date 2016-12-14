@@ -11,19 +11,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.tomohiko_sato.myhandler.MainActivity">
 
-    <TextView
-        android:id="@+id/text_view"
+    <Button
+        android:text="hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:id="@+id/button_hello"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/button_bye"/>
 
     <Button
-        android:text="Button"
+        android:text="bye"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view"
-        android:layout_toRightOf="@+id/text_view"
-        android:layout_toEndOf="@+id/text_view"
-        android:layout_marginTop="101dp"
-        android:id="@+id/button"/>
+        android:id="@+id/button_bye"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>
