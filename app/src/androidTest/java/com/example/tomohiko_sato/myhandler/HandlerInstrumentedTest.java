@@ -1,6 +1,5 @@
 package com.example.tomohiko_sato.myhandler;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -31,7 +30,7 @@ public class HandlerInstrumentedTest {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						assertEquals(Thread.currentThread(), getMainLooper().getThread());
+						assertEquals(getMainLooper().getThread(), Thread.currentThread());
 					}
 				});
 			}
@@ -48,7 +47,7 @@ public class HandlerInstrumentedTest {
 				try {
 					new Handler().post(mockR);
 				} catch (RuntimeException e) {
-					assertEquals(e.getMessage(), "Can't create handler inside thread that has not called Looper.prepare()");
+					assertEquals("Can't create handler inside thread that has not called Looper.prepare()", e.getMessage());
 				}
 			}
 		}).start();
