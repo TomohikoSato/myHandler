@@ -12,7 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
- * Handlerを使用した、WorkerThread上で動くBindServiceのサンプル
+ * Handlerを使用した、WorkerThread上で動くBoundServiceのサンプル
  */
 public class WorkerThreadService extends Service {
 	private final static String TAG = WorkerThreadService.class.getSimpleName();
