@@ -11,6 +11,9 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Handlerを使用した、WorkerThread上で動くBindServiceのサンプル
+ */
 public class WorkerThreadService extends Service {
 	private final static String TAG = WorkerThreadService.class.getSimpleName();
 	private ServiceBinder binder = new ServiceBinder();
