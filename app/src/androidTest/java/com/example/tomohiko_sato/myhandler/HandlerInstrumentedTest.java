@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.support.test.InstrumentationRegistry;
+import android.os.Message;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
@@ -17,12 +17,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
-
-/**
- * Instrumentation test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
 @RunWith(AndroidJUnit4.class)
 public class HandlerInstrumentedTest {
 
@@ -71,5 +65,34 @@ public class HandlerInstrumentedTest {
 		new Handler(handlerThread.getLooper()).post(mockR);
 
 		verify(mockR, timeout(100).times(1)).run(); // 非同期にrun()が呼ばれるので少し遅延させる
+	}
+
+	private final static int MSG_HELLO = 123;
+	private final static int MSG_BYE = 343;
+
+	private final static String MSG_HELLO_OBJ = "konichiwa";
+	private final static String MSG_BYE_OBJ = "sayonara";
+
+	@Test
+	public void sendMessageするとonHandleMessageが呼ばれる() {
+
+		Handler handler = new Handler(getMainLooper()) {
+			@Override
+			public void handleMessage(Message msg) {
+				String messageObj = (String) msg.obj;
+
+				switch (msg.what) {
+					case MSG_HELLO:
+						assertEquals(MSG_HELLO_OBJ, messageObj);
+						break;
+					case MSG_BYE:
+						assertEquals(MSG_BYE_OBJ, messageObj);
+						break;
+				}
+			}
+		};
+
+		handler.sendMessage(handler.obtainMessage(MSG_HELLO, MSG_HELLO_OBJ));
+		handler.sendMessage(handler.obtainMessage(MSG_BYE, MSG_BYE_OBJ));
 	}
 }
